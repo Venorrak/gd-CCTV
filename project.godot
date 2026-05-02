@@ -1,0 +1,8 @@
+config_version=5
+
+[application]
+config/name="gd-CCTV"
+config/features=PackedStringArray("4.6")
+config/icon="res://assets/icon.svg"
+
+
