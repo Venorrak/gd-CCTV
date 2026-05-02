@@ -16,6 +16,8 @@ class_name CCTVManager extends Node
 
 var _camera_change_timer : Timer
 
+signal camera_changed(oldCamera: Camera3D, newCamera: CCTVCamera)
+
 func _ready() -> void:
 	_setup_timer()
 
@@ -44,4 +46,6 @@ func _camera_change_callback() -> void:
 		return
 
 	if not nearest_camera.current:
+		var oldCam : Camera3D = get_viewport().get_camera_3d()
 		nearest_camera.make_current()
+		camera_changed.emit(oldCam, nearest_camera)
