@@ -32,20 +32,17 @@ func _setup_timer() -> void:
 func _camera_change_callback() -> void:
 	if not enabled: return
 	if cameras.is_empty(): return
-	var nearest_camera : CCTVCamera
-	var nearest : float = 999999999999
+	var chosen_camera : CCTVCamera
 	for c in cameras:
-		if not c.can_see_target(): continue
-		var dist : float = c.distance_to_target()
-		if dist < nearest:
-			nearest = dist
-			nearest_camera = c
+		if c.can_see_target():
+			chosen_camera = c
+			break
 
-	if not nearest_camera:
+	if not chosen_camera:
 		push_warning("no camera can see the target")
 		return
 
-	if not nearest_camera.current:
+	if not chosen_camera.current:
 		var oldCam : Camera3D = get_viewport().get_camera_3d()
-		nearest_camera.make_current()
-		camera_changed.emit(oldCam, nearest_camera)
+		chosen_camera.make_current()
+		camera_changed.emit(oldCam, chosen_camera)
