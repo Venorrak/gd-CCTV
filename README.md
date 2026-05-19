@@ -1,5 +1,5 @@
 # gd-CCTV
-<strong>A Gotot Plugin for building custom & intelligent camera systems that tracks a certain target
+<strong>A Godot Plugin for building custom & intelligent camera systems that tracks a certain target
 
 ![little demo](assets/2026-05-0123-20-04-ezgif.com-video-to-gif-converter.gif)
 
