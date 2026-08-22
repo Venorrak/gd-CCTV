@@ -1,0 +1,51 @@
+name: Publish to Godot Asset Store
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout release tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      - name: Package addon
+        run: |
+          # Adjust this to match your repo layout.
+          ADDON_DIR="addons/cctv"
+          ZIP_NAME="gd-CCTV-${{ github.event.release.tag_name }}.zip"
+          cd "$(dirname "$ADDON_DIR")"
+          zip -r "$GITHUB_WORKSPACE/$ZIP_NAME" "$(basename "$ADDON_DIR")"
+          echo "ZIP_NAME=$ZIP_NAME" >> "$GITHUB_ENV"
+
+      - name: Write release notes to file
+        env:
+          RELEASE_BODY: ${{ github.event.release.body }}
+        run: |
+          # Written to a file rather than passed inline, since release notes
+          # can contain quotes/newlines that break shell argument passing.
+          printf '%s' "$RELEASE_BODY" > release_notes.txt
+
+      - name: Publish version to Asset Store
+        env:
+          GODOT_STORE_SESSION: ${{ secrets.GODOT_STORE_SESSION }}
+          ASSET_USER: venorrak
+          ASSET_SLUG: gd-cctv
+          MIN_GODOT_VERSION: "Godot 4.5"
+          MAX_GODOT_VERSION: "Godot 4.7.2"
+        run: |
+          chmod +x scripts/publish_godot_asset.sh
+          VERSION="${{ github.event.release.tag_name }}"
+          if [ "${#VERSION}" -lt 3 ]; then
+            echo "!! Release tag '$VERSION' is under 3 characters, the store will reject it." >&2
+            exit 1
+          fi
+          ./scripts/publish_godot_asset.sh \
+            "$ZIP_NAME" \
+            "$VERSION" \
+            "$(cat release_notes.txt)"
+
