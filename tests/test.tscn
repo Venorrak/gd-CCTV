@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://c1k2mh7wj4fj1"]
+
+[ext_resource type="Script" uid="uid://bbdp4142rpf8j" path="res://addons/cctv/camera_manager.gd" id="1_eig8f"]
+[ext_resource type="Script" uid="uid://d4ndtfvpdboqe" path="res://addons/cctv/camera.gd" id="2_7517i"]
+[ext_resource type="Script" uid="uid://c7a1twsghbsvf" path="res://addons/cctv/ManagerBehaviour/nearest_behaviour.gd" id="2_dsb46"]
+[ext_resource type="Script" uid="uid://cxgeraqgusci4" path="res://addons/cctv/VisionTester/normal_vision.gd" id="3_ry45r"]
+[ext_resource type="Script" uid="uid://c3cbtpbdoor4p" path="res://addons/cctv/CameraBehaviour/normal_behaviour.gd" id="4_dsb46"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_dsb46"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_uofsi"]
+sky_material = SubResource("ProceduralSkyMaterial_dsb46")
+
+[sub_resource type="Environment" id="Environment_jenrn"]
+background_mode = 2
+sky = SubResource("Sky_uofsi")
+glow_enabled = true
+
+[sub_resource type="Resource" id="Resource_jenrn"]
+script = ExtResource("2_dsb46")
+metadata/_custom_type_script = "uid://c7a1twsghbsvf"
+
+[sub_resource type="Resource" id="Resource_uofsi"]
+script = ExtResource("3_ry45r")
+
+[sub_resource type="Curve" id="Curve_jenrn"]
+
+[sub_resource type="Resource" id="Resource_mm0ke"]
+script = ExtResource("4_dsb46")
+zoom_curve = SubResource("Curve_jenrn")
+
+[sub_resource type="Resource" id="Resource_ymr3d"]
+script = ExtResource("3_ry45r")
+
+[sub_resource type="Curve" id="Curve_5fw7c"]
+
+[sub_resource type="Resource" id="Resource_7y2ik"]
+script = ExtResource("4_dsb46")
+zoom_curve = SubResource("Curve_5fw7c")
+
+[node name="Node3D" type="Node3D" unique_id=421642260]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=539702796]
+environment = SubResource("Environment_jenrn")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=802387706]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="CCTVManager" type="Node" parent="." unique_id=745918051 node_paths=PackedStringArray("cameras", "target")]
+script = ExtResource("1_eig8f")
+cameras = [NodePath("../CCTVCamera"), NodePath("../CCTVCamera2")]
+target = NodePath("../Node3D")
+behaviour = SubResource("Resource_jenrn")
+metadata/_custom_type_script = "uid://bbdp4142rpf8j"
+
+[node name="CCTVCamera" type="Camera3D" parent="." unique_id=886563913]
+transform = Transform3D(0.87758255, -0.22984886, 0.42073548, 0, 0.87758255, 0.47942555, -0.47942555, -0.4207355, 0.77015114, 1.682942, 1.9177022, 3.0806046)
+script = ExtResource("2_7517i")
+vision_tester = SubResource("Resource_uofsi")
+camera_behaviour = SubResource("Resource_mm0ke")
+metadata/_custom_type_script = "uid://d4ndtfvpdboqe"
+
+[node name="CCTVCamera2" type="Camera3D" parent="." unique_id=1565178629]
+transform = Transform3D(0.2823094, 0.6830381, -0.6736174, 0, 0.7021797, 0.71199983, 0.9593234, -0.20100425, 0.19823194, -0.73539114, 2.8643043, 3.878637)
+script = ExtResource("2_7517i")
+vision_tester = SubResource("Resource_ymr3d")
+camera_behaviour = SubResource("Resource_7y2ik")
+metadata/_custom_type_script = "uid://d4ndtfvpdboqe"
+
+[node name="Node3D" type="Node3D" parent="." unique_id=2046422432]

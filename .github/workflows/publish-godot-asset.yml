@@ -13,13 +13,10 @@ jobs:
         with:
           ref: ${{ github.event.release.tag_name }}
 
-      - name: Package addon
+      - name: Package release archive
         run: |
-          # Adjust this to match your repo layout.
-          ADDON_DIR="addons/cctv"
           ZIP_NAME="gd-CCTV-${{ github.event.release.tag_name }}.zip"
-          cd "$(dirname "$ADDON_DIR")"
-          zip -r "$GITHUB_WORKSPACE/$ZIP_NAME" "$(basename "$ADDON_DIR")"
+          git archive --format=zip --output "$GITHUB_WORKSPACE/$ZIP_NAME" HEAD
           echo "ZIP_NAME=$ZIP_NAME" >> "$GITHUB_ENV"
 
       - name: Write release notes to file
